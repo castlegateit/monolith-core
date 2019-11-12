@@ -357,23 +357,72 @@ function formatAttributes($attributes)
  * in an HTML document.
  *
  * @param string $file
- * @param string $title
- * @param boolean $nofill
- * @return string
+ * @param array $args
+ * @param null $deprecated
+ * @return ScalableVectorGraphic|string
  */
-function embedSvg($file, $title = false, $nofill = false)
+function embedSvg($file, $args = [], $deprecated = null)
 {
+    $defaults = [
+        'attributes' => [],
+        'title' => null,
+        'fill' => null,
+        'removeAttributes' => [],
+        'removeStyles' => [],
+        'return' => 'embed', // values: embed, instance
+    ];
+
+    // Parse legacy parameters
+    if (!is_array($args)) {
+        $title = null;
+        $styles = [];
+
+        // Set title?
+        if (is_string($args)) {
+            $title = $args;
+        }
+
+        // Remove fill?
+        if (is_bool($deprecated) && $deprecated) {
+            $styles = ['fill'];
+        }
+
+        $args = [
+            'title' => $title,
+            'removeStyles' => $styles,
+        ];
+    }
+
+    // Parse sanitized parameters
+    $args = array_merge($defaults, array_intersect_key($args, $defaults));
+
+    // Embed SVG
     $svg = new ScalableVectorGraphic;
+
+    // Load SVG file and sanitize attributes and styles
     $svg->load($file);
+    $svg->removeAttributes($args['removeAttributes']);
+    $svg->removeStyles($args['removeStyles']);
 
-    if ($title) {
-        $svg->title($title);
+    // Set title?
+    if (!is_null($args['title'])) {
+        $svg->title($args['title']);
     }
 
-    if ($nofill) {
-        $svg->removeStyles('fill');
+    // Set fill colour?
+    if (!is_null($args['fill'])) {
+        $svg->fill($args['fill']);
     }
 
+    // Set additional attributes?
+    $svg->setAttributes($args['attributes']);
+
+    // Return SVG as instance
+    if ($args['return'] == 'instance') {
+        return $svg;
+    }
+
+    // Return SVG as string
     return $svg->embed();
 }
 

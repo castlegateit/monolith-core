@@ -336,6 +336,28 @@ class ScalableVectorGraphic
     }
 
     /**
+     * Set attributes
+     *
+     * Set one or more attributes on the root SVG element using an associative
+     * array, where the array keys are the attribute names and the array values
+     * are the attribute values.
+     *
+     * @param array $attributes
+     */
+    public function setAttributes($attributes)
+    {
+        if (!is_array($attributes)) {
+            return;
+        }
+
+        foreach ($attributes as $attribute => $value) {
+            $this->dom->documentElement->setAttribute($attribute, $value);
+        }
+
+        return $this;
+    }
+
+    /**
      * Set the SVG title
      *
      * @param string $text
@@ -377,9 +399,7 @@ class ScalableVectorGraphic
      */
     public function fill($fill)
     {
-        $this->dom->documentElement->setAttribute('fill', $fill);
-
-        return $this;
+        return $this->setAttributes(['fill' => $fill]);
     }
 
     /**

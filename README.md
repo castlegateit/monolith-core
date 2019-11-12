@@ -36,7 +36,7 @@ Monolith Core is available on [Packagist](https://packagist.org/) and can be ins
 
 *   `formatAttributes($attributes)` Converts an associative array into a string containing HTML attributes. Nested arrays are converted into space-separated lists.
 
-*   `embedSvg($file, $title = false, $nofill = false)` Return the contents of an SVG file stripped of anything that might cause problems when it is embedded in an HTML file. This function uses the `ScalableVectorGraphic` class described below.
+*   `embedSvg($file, $args = [])` Return the contents of an SVG file stripped of anything that might cause problems when it is embedded in an HTML file. This function uses the `ScalableVectorGraphic` class described below.
 
 *   `twitterName($url)` Extract and return a Twitter handle from a valid Twitter URL.
 
