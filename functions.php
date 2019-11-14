@@ -243,6 +243,62 @@ function formatTelLink($tel, $content = null, $attributes = [], $code = null)
 }
 
 /**
+ * Randomly encode a character or sequence of characters
+ *
+ * Randomly encode each character in a string as (i) a Unicode character, (ii) a
+ * decimal HTML entity, or (iii) a hexadecimal HTML entity.
+ *
+ * @param string $text
+ * @return string
+ */
+function obfuscate($text)
+{
+    if (strlen($text) > 1) {
+        $characters = str_split($text);
+
+        // Encode individual characters
+        $obfuscated = array_map(function ($character) {
+            return obfuscate($character);
+        }, $characters);
+
+        return implode('', $obfuscated);
+    }
+
+    // Encode as decimal entity
+    $code = ord($text);
+
+    switch (rand(0, 2)) {
+        case 0:
+            // Return unmodified character
+            return $text;
+        case 1:
+            // Encode as hexadecimal entity
+            $code = 'x' . str_pad(dechex($code), 4, '0', STR_PAD_LEFT);
+    }
+
+    return '&#' . $code . ';'
+}
+
+/**
+ * Return obfuscated HTML email link
+ *
+ * @param string $email
+ * @param string $content
+ * @param array $attributes
+ * @return string
+ */
+function obfuscateLink($email, $content = null, $attributes = [])
+{
+    if (is_null($content)) {
+        $content = obfuscate(html_entity_decode($email));
+    }
+
+    $attributes['href'] = obfuscate('mailto:' . $email);
+
+    return '<a ' . formatAttributes($attributes) . '>' . $content . '</a>';
+}
+
+/**
  * Ordinals
  *
  * Return a number with its appropriate English language ordinal suffix, e.g.

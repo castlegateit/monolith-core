@@ -28,6 +28,10 @@ Monolith Core is available on [Packagist](https://packagist.org/) and can be ins
 
 *   `formatTelLink($tel, $content = null, $attributes = [], $code = null)` Return a telephone number link.
 
+*   `obfuscate($text)` Return a string with characters randomly encoded as HTML entities.
+
+*   `obfuscateLink($email, $content = null, $attributes = [])` Return an obfuscated HTML email link.
+
 *   `ordinal($number)` Return a number with its appropriate ordinal suffix, e.g. "1st", "2nd", or "3rd".
 
 *   `truncate($text, $max, $ellipsis = ' &hellip;')` Truncates text to within a particular number of characters, avoiding breaking words.
