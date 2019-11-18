@@ -276,7 +276,7 @@ function obfuscate($text)
             $code = 'x' . str_pad(dechex($code), 4, '0', STR_PAD_LEFT);
     }
 
-    return '&#' . $code . ';'
+    return '&#' . $code . ';';
 }
 
 /**
