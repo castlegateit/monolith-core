@@ -201,21 +201,32 @@ function formatLink($url, $content = null, $attributes = [])
  */
 function formatTel($tel, $human = false, $code = null)
 {
+    $tel = trim(html_entity_decode($tel));
+    $default_code = '44';
+
     if ($human) {
         return str_replace(' ', '&nbsp;', $tel);
     }
 
-    $tel = preg_replace('/\D/', '', html_entity_decode($tel));
+    // Extract country code and phone number from string, ignoring optional
+    // parts in brackets.
+    preg_match('/^(\+\d+)? *(\(.*\))? *(.*)$/', $tel, $matches);
 
-    if (substr($tel, 0, 1) === '0') {
-        if (is_null($code)) {
-            $code = '+44';
-        }
-
-        $tel = $code . substr($tel, 1);
+    if (is_null($code)) {
+        $code = $matches[1];
     }
 
-    return $tel;
+    $code = preg_replace('/\D/', '', (string) $code) ?: $default_code;
+    $number = preg_replace('/\D/', '', $matches[3]);
+
+    // Strip leading zero from UK area codes
+    if ($code === $default_code &&
+        strlen($number) > 6 &&
+        substr($number, 0, 1) === '0') {
+        $number = substr($number, 1);
+    }
+
+    return '+' . $code . $number;
 }
 
 /**
