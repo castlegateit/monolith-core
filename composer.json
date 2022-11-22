@@ -1,7 +1,7 @@
 {
     "name": "castlegate/monolith-core",
     "description": "Basic utilities and functions for PHP development.",
-    "license": "GPL-3.0-or-later",
+    "license": "MIT",
     "authors": [
         {
             "name": "John Hughes",
